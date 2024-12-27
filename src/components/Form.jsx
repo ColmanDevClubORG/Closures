@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useValidator } from '../hooks/useValidator';
 
 export const Form = () => {
-  const { validate, rules } = useValidator();
+  const { validate, getValidator } = useValidator();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -16,10 +16,13 @@ export const Form = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const emailError = validate(formData.email, [rules.required, rules.email]);
+    const emailError = validate(formData.email, [
+      getValidator.required(),
+      getValidator.email(),
+    ]);
     const passwordError = validate(formData.password, [
-      rules.required,
-      rules.minLength(6),
+      getValidator.required(),
+      getValidator.minLength(6),
     ]);
 
     if (emailError !== true || passwordError !== true) {

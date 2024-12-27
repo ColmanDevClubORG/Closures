@@ -1,4 +1,3 @@
-//TODO implement this with the class and show them how closure is used
 export const useValidator = () => {
   const rules = {
     required: (value) => value.trim() !== '' || 'This field is required.',
@@ -7,13 +6,19 @@ export const useValidator = () => {
     email: (value) => /\S+@\S+\.\S+/.test(value) || 'Invalid email address.',
   };
 
-  const validate = (value, validations) => {
-    for (let rule of validations) {
-      const result = rule(value);
+  const validate = (value, validators) => {
+    for (let validator of validators) {
+      const result = validator(value);
       if (result !== true) return result;
     }
     return true;
   };
 
-  return { validate, rules };
+  const getValidator = {
+    required: () => (value) => rules.required(value),
+    minLength: (min) => (value) => rules.minLength(min)(value),
+    email: () => (value) => rules.email(value),
+  };
+
+  return { validate, getValidator };
 };
